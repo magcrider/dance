@@ -1,4 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { FaPlay, FaPause } from "react-icons/fa";
+import { FaShuffle,FaRepeat } from "react-icons/fa6";
+import { TbRepeat, TbRepeatOff } from "react-icons/tb";
+import { RiExpandRightFill, RiExpandLeftFill } from "react-icons/ri";
+import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled} from "react-icons/tb";
+
+
+
+
+
 
 const track = {
     name: "",
@@ -34,7 +44,7 @@ function WebPlayback(props) {
                 getOAuthToken: cb => { cb(props.token); },
                 volume: 0.5
             });
-            
+
             setPlayer(spotifyPlayer);
 
             spotifyPlayer.addListener('ready', ({ device_id }) => {
@@ -120,25 +130,46 @@ function WebPlayback(props) {
             <>
                 <div className="container">
                     <div className="main-wrapper">
-
-                        <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
-
                         <div className="now-playing__side">
                             <div className="now-playing__name">{current_track.name}</div>
                             <div className="now-playing__artist">{current_track.artists[0].name}</div>
 
-                            <button className="btn-spotify" onClick={handlePreviousTrack} >
-                                &lt;&lt;
-                            </button>
+                            <div className="btns-wrapper">
+                                <div className="btns-row">
+                                    <button className="btn-spotify" onClick={handlePreviousTrack} >
+                                        <RiExpandRightFill />
+                                    </button>
 
-                            <button className="btn-spotify" onClick={handleTogglePlay} >
-                                {is_paused ? "PLAY" : "PAUSE"}
-                            </button>
+                                    <button className="btn-spotify" onClick={handleTogglePlay} >
+                                        {is_paused ? <TbRepeat /> : <TbRepeatOff/>}
+                                    </button>
 
-                            <button className="btn-spotify" onClick={handleNextTrack} >
-                                &gt;&gt;
-                            </button>
+                                    <button className="btn-spotify" onClick={handleNextTrack} >
+                                        <RiExpandLeftFill />
+                                    </button>   
+                                </div>
+                                <div className="btns-row">
+                                    <button className="btn-spotify" onClick={handleTogglePlay} >
+                                        {is_paused ?  <FaPlay />:<FaPause />}
+                                    </button>
+                                </div>
+                                <div className="btns-row">
+                                    <button className="btn-spotify" onClick={handlePreviousTrack} >
+                                        <TbPlayerTrackPrevFilled/>
+                                    </button>
+
+                                    <button className="btn-spotify" onClick={handleTogglePlay} >
+                                        {is_paused ? <FaRepeat/> : <FaShuffle />}
+                                    </button>
+
+                                    <button className="btn-spotify" onClick={handleNextTrack} >
+                                        <TbPlayerTrackNextFilled/>
+                                    </button>   
+                                </div>
+                            </div>
+                            
                         </div>
+                        <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
                     </div>
                 </div>
             </>
