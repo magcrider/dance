@@ -64,7 +64,9 @@ function App() {
           REFRESH
         </button>
       </header>
-      {!token ? <Login /> : <WebPlayback token={token} />}
+      <div className="main-wrapper">
+        {!token ? <Login /> : <WebPlayback token={token} />}
+      </div>
     </div>
   );
 }
