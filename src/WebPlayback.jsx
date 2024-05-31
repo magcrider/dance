@@ -29,25 +29,23 @@ function WebPlayback(props) {
 
         window.onSpotifyWebPlaybackSDKReady = () => {
 
-            const player = new window.Spotify.Player({
+            const spotifyPlayer = new window.Spotify.Player({
                 name: 'MAGC Dance',
                 getOAuthToken: cb => { cb(props.token); },
                 volume: 0.5
             });
+            
+            setPlayer(spotifyPlayer);
 
-            console.log( " *** PLAYER", player);
-
-            setPlayer(player);
-
-            player.addListener('ready', ({ device_id }) => {
+            spotifyPlayer.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
             });
 
-            player.addListener('not_ready', ({ device_id }) => {
+            spotifyPlayer.addListener('not_ready', ({ device_id }) => {
                 console.log('Device ID has gone offline', device_id);
             });
 
-            player.addListener('player_state_changed', ( state => {
+            spotifyPlayer.addListener('player_state_changed', (state => {
 
                 if (!state) {
                     return;
@@ -56,18 +54,59 @@ function WebPlayback(props) {
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
 
-                player.getCurrentState().then( state => { 
-                    (!state)? setActive(false) : setActive(true) 
+                spotifyPlayer.getCurrentState().then(state => {
+                    (!state) ? setActive(false) : setActive(true)
                 });
 
             }));
 
-            player.connect();
-
+            spotifyPlayer.connect().then(success => {
+                if (success) {
+                    console.log('Player connected successfully');
+                } else {
+                    console.log('Player connection failed');
+                }
+            });
         };
     }, [props.token]);
 
-    if (!is_active) { 
+    const handlePreviousTrack = () => {
+        if (player) {
+            player.previousTrack().then(() => {
+                console.log('Skipped to previous track');
+            }).catch(error => {
+                console.error('Error skipping to previous track:', error);
+            });
+        } else {
+            console.error('Player is not initialized');
+        }
+    };
+
+    const handleTogglePlay = () => {
+        if (player) {
+            player.togglePlay().then(() => {
+                console.log('Playback toggled');
+            }).catch(error => {
+                console.error('Error toggling playback:', error);
+            });
+        } else {
+            console.error('Player is not initialized');
+        }
+    };
+
+    const handleNextTrack = () => {
+        if (player) {
+            player.nextTrack().then(() => {
+                console.log('Skipped to next track');
+            }).catch(error => {
+                console.error('Error skipping to next track:', error);
+            });
+        } else {
+            console.error('Player is not initialized');
+        }
+    };
+
+    if (!is_active) {
         return (
             <>
                 <div className="container">
@@ -88,15 +127,15 @@ function WebPlayback(props) {
                             <div className="now-playing__name">{current_track.name}</div>
                             <div className="now-playing__artist">{current_track.artists[0].name}</div>
 
-                            <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
+                            <button className="btn-spotify" onClick={handlePreviousTrack} >
                                 &lt;&lt;
                             </button>
 
-                            <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
-                                { is_paused ? "PLAY" : "PAUSE" }
+                            <button className="btn-spotify" onClick={handleTogglePlay} >
+                                {is_paused ? "PLAY" : "PAUSE"}
                             </button>
 
-                            <button className="btn-spotify" onClick={() => { player.nextTrack() }} >
+                            <button className="btn-spotify" onClick={handleNextTrack} >
                                 &gt;&gt;
                             </button>
                         </div>
@@ -107,4 +146,4 @@ function WebPlayback(props) {
     }
 }
 
-export default WebPlayback
+export default WebPlayback;
