@@ -13,9 +13,8 @@ function App() {
     async function getToken() {
       const response = await fetch(`/auth/token`);
       const json = await response.json();
-      console.log(" *** token:", json.access_token === "");
       if (json.access_token !== "") setToken(json.access_token);
-      console.log(" *** tokenstate:", token);
+      // console.log(" *** tokenstate:", token);
     }
     getToken();
   }, [token]);

@@ -1,28 +1,30 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
+import * as React from "react";
+import { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
 
-function valuetext(value) {
-  return `${value}°C`;
-}
-
-export default function RangeSlider() {
-  const [value, setValue] = React.useState([20, 37]);
+export default function RangeSlider({ min, max, disabled, values }) {
+  const [value, setValue] = React.useState(values);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  useEffect(()=>{
+    setValue(values);
+  },[values]);
+
   return (
     <Box sx={{ width: 300 }}>
       <Slider
-        getAriaLabel={() => 'Temperature range'}
         value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
-        getAriaValueText={valuetext}
         size="small"
         color="secondary"
+        min={min}
+        max={max}
+        disabled={disabled}
       />
     </Box>
   );
