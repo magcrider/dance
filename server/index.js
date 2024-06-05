@@ -46,7 +46,6 @@ app.get('/auth/login', (req, res) => {
 // Handle the GET request from the React app to exchange the code for an access token
 app.get('/auth/callback', (req, res) => {
   const code = req.query.code;
-  console.log('Authorization Code:', code); // Log the authorization code
 
   const authOptions = {
     url: 'https://accounts.spotify.com/api/token',
@@ -68,15 +67,9 @@ app.get('/auth/callback', (req, res) => {
       res.status(500).send('Internal Server Error');
       return;
     }
-
-    console.log('Response Status Code:', response.statusCode);
-    console.log('Response Body:', body);
-
     if (response.statusCode === 200) {
       access_token = body.access_token;
       refresh_token = body.refresh_token;
-      console.log('Access Token:', access_token);
-      console.log('Refresh Token:', refresh_token);
       res.json({ access_token: access_token });
     } else {
       console.error('Error fetching access token:', body);

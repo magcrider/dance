@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { FaShuffle, FaRepeat } from "react-icons/fa6";
 import { TbRepeat, TbRepeatOff } from "react-icons/tb";
@@ -23,6 +23,8 @@ function WebPlayback(props) {
   const [is_active, setActive] = useState(false);
   const [player, setPlayer] = useState(undefined);
   const [current_track, setTrack] = useState(track);
+  const [sliderSeconds, setSliderSeconds] = useState(0);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -51,6 +53,7 @@ function WebPlayback(props) {
       });
 
       spotifyPlayer.addListener("player_state_changed", (state) => {
+        console.log(" *** player_state_changed: state: ", state);
         if (!state) {
           return;
         }
@@ -73,11 +76,36 @@ function WebPlayback(props) {
     };
   }, [props.token]);
 
+  useEffect(() => {
+    console.log(" *** current_track", current_track);
+
+    if (!is_paused) {
+      timerRef.current = setInterval(() => {
+        setSliderSeconds((prevTime) => prevTime + 1);
+      }, 1000);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [current_track, is_paused]);
+
+  const handlePauseResume = () => {
+    if (is_paused) {
+      // Resume the timer
+      timerRef.current = setInterval(() => {
+        setSliderSeconds((prevTime) => prevTime + 1);
+      }, 1000);
+    } else {
+      // Pause the timer
+      clearInterval(timerRef.current);
+    }
+  };
+
   const handlePreviousTrack = () => {
     if (player) {
       player
         .previousTrack()
         .then(() => {
+          setSliderSeconds(0);
           console.log("Skipped to previous track");
         })
         .catch((error) => {
@@ -93,6 +121,7 @@ function WebPlayback(props) {
       player
         .togglePlay()
         .then(() => {
+          handlePauseResume();
           console.log("Playback toggled");
         })
         .catch((error) => {
@@ -108,6 +137,7 @@ function WebPlayback(props) {
       player
         .nextTrack()
         .then(() => {
+          setSliderSeconds(0);
           console.log("Skipped to next track");
         })
         .catch((error) => {
@@ -115,6 +145,15 @@ function WebPlayback(props) {
         });
     } else {
       console.error("Player is not initialized");
+    }
+  };
+
+  const handleSlideChange = (event, newValue) => {
+    if (player) {
+      player.seek(newValue * 1000).then(() => {
+        setSliderSeconds(newValue);
+        console.log("Changed position!", newValue);
+      });
     }
   };
 
@@ -144,9 +183,12 @@ function WebPlayback(props) {
                 {
                   <Slider
                     size="small"
-                    defaultValue={70}
-                    aria-label="Small"
+                    defaultValue={0}
+                    min={0}
+                    max={Math.floor(current_track.duration_ms / 1000)}
                     valueLabelDisplay="auto"
+                    onChange={handleSlideChange}
+                    value={sliderSeconds}
                   />
                 }
               </div>
