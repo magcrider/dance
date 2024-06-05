@@ -232,28 +232,30 @@ function WebPlayback(props) {
               <div className="now-playing__artist">
                 {current_track.artists[0].name}
               </div>
-              <div className="slider small-slider">
-                {
-                  <Slider
-                    size="small"
-                    defaultValue={0}
-                    min={0}
-                    max={Math.floor(current_track.duration_ms / 1000)}
-                    valueLabelDisplay="on"
-                    onChange={handleSlideChange}
-                    value={sliderSeconds}
-                  />
-                }
-              </div>
-              <div className="slider">
-                {
-                  <RangeSlider
-                    min={0}
-                    max={Math.floor(current_track.duration_ms / 1000)}
-                    values={[loopStartPos, loopStopPos]}
-                    disabled={loopStartPos === 0 || loopStopPos === 0}
-                  />
-                }
+              <div className="sliders-wrapper">
+                <div className="slider small-slider">
+                  {
+                    <Slider
+                      size="small"
+                      defaultValue={0}
+                      min={0}
+                      max={Math.floor(current_track.duration_ms / 1000)}
+                      valueLabelDisplay="on"
+                      onChange={handleSlideChange}
+                      value={sliderSeconds}
+                    />
+                  }
+                </div>
+                <div className="slider">
+                  {
+                    <RangeSlider
+                      min={0}
+                      max={Math.floor(current_track.duration_ms / 1000)}
+                      values={[loopStartPos, loopStopPos]}
+                      disabled={loopStartPos === 0 || loopStopPos === 0}
+                    />
+                  }
+                </div>
               </div>
               <div className="btns-wrapper">
                 <div className="btns-row">
@@ -283,20 +285,15 @@ function WebPlayback(props) {
                   </button>
                 </div>
                 <div className="btns-row">
+                  <button className="btn-player" onClick={handlePreviousTrack}>
+                    <TbPlayerTrackPrevFilled />
+                  </button>
+
                   <button
                     className={"btn-player big-button"}
                     onClick={handleTogglePlay}
                   >
                     {is_paused ? <FaPlay /> : <FaPause />}
-                  </button>
-                </div>
-                <div className="btns-row">
-                  <button className="btn-player" onClick={handlePreviousTrack}>
-                    <TbPlayerTrackPrevFilled />
-                  </button>
-
-                  <button className="btn-player" onClick={handleTogglePlay}>
-                    {is_paused ? <FaRepeat /> : <FaShuffle />}
                   </button>
 
                   <button className="btn-player" onClick={handleNextTrack}>

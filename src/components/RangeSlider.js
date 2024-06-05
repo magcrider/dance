@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useEffect } from "react";
-import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
 export default function RangeSlider({ min, max, disabled, values }) {
@@ -10,22 +9,20 @@ export default function RangeSlider({ min, max, disabled, values }) {
     setValue(newValue);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setValue(values);
-  },[values]);
+  }, [values]);
 
   return (
-    <Box sx={{ width: 300 }}>
-      <Slider
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-        size="small"
-        color="secondary"
-        min={min}
-        max={max}
-        disabled={disabled}
-      />
-    </Box>
+    <Slider
+      value={value}
+      onChange={handleChange}
+      valueLabelDisplay="auto"
+      size="small"
+      color="secondary"
+      min={min}
+      max={max}
+      disabled={disabled}
+    />
   );
 }

@@ -54,14 +54,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button
-          name=""
+        <h2
           onClick={() => {
             refreshAccessToken();
           }}
         >
-          REFRESH
-        </button>
+          MAGC Dance player
+        </h2>
       </header>
       <div className="main-wrapper">
         {!token ? <Login /> : <WebPlayback token={token} />}
