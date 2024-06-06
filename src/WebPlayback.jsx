@@ -61,9 +61,8 @@ function WebPlayback(props) {
           return;
         }
 
-        console.log(" *** player_state_changed: state: ", state);
+        // console.log(" *** player_state_changed: state: ", state);
 
-        // setDuration(state.track_window.current_track.duration_ms);
         setSliderSeconds(Math.floor(state.position / 1000));
         setTrack(state.track_window.current_track);
         setPaused(state.paused);
@@ -97,7 +96,6 @@ function WebPlayback(props) {
       if (loopStartPos > 0 && loopStopPos > 0 && sliderSeconds > loopStopPos) {
         player.seek(loopStartPos * 1000).then(() => {
           setSliderSeconds(loopStartPos);
-          console.log("Changed position! 1", loopStartPos);
         });
       } else if (
         sliderSeconds ===
@@ -105,14 +103,9 @@ function WebPlayback(props) {
       ) {
         player.seek(0).then(() => {
           setSliderSeconds(0);
-          console.log("Changed position! 2", loopStartPos);
         });
       }
-    } else {
-      //   TrackPlayer.setRepeatMode(RepeatMode.Queue);
-      //   console.log(" *** HARD", sliderSeconds);
     }
-    //   }, [repeatTrack, position, loopStopPos, loopStartPos]);
   }, [
     repeatTrack,
     loopStopPos,
@@ -122,6 +115,11 @@ function WebPlayback(props) {
     current_track.duration_ms,
   ]);
 
+  const updateLoopSliderPos = ([startPos, stopPos]) => {
+    setloopStartPos(startPos);
+    setloopStopPos(stopPos);
+  };
+
   const resetRepeat = () => {
     setloopStartPos(0);
     setloopStopPos(0);
@@ -129,7 +127,6 @@ function WebPlayback(props) {
   };
 
   const handlePauseResume = () => {
-    console.log(" *** current_track", current_track);
     if (is_paused) {
       timerRef.current = setInterval(() => {
         setSliderSeconds((prevTime) => prevTime + 1);
@@ -194,7 +191,6 @@ function WebPlayback(props) {
       // TODO: check the player.seek not working when the song changes automatically
       player.seek(newValue * 1000).then(() => {
         setSliderSeconds(newValue);
-        console.log("Changed position! 3", newValue);
       });
     }
   };
@@ -252,6 +248,7 @@ function WebPlayback(props) {
                       min={0}
                       max={Math.floor(current_track.duration_ms / 1000)}
                       values={[loopStartPos, loopStopPos]}
+                      updatePosHandler={updateLoopSliderPos}
                       disabled={loopStartPos === 0 || loopStopPos === 0}
                     />
                   }

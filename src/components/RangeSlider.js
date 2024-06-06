@@ -2,16 +2,26 @@ import * as React from "react";
 import { useEffect } from "react";
 import Slider from "@mui/material/Slider";
 
-export default function RangeSlider({ min, max, disabled, values }) {
+export default function RangeSlider({
+  min,
+  max,
+  disabled,
+  values,
+  updatePosHandler,
+}) {
   const [value, setValue] = React.useState(values);
 
   const handleChange = (event, newValue) => {
+    console.log(" *** NEW SLIDER VALUES", newValue);
     setValue(newValue);
   };
 
   useEffect(() => {
     setValue(values);
   }, [values]);
+  useEffect(() => {
+    updatePosHandler(value);
+  }, [updatePosHandler, value]);
 
   return (
     <Slider
