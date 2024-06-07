@@ -12,7 +12,7 @@ let refresh_token = '';
 
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-const spotify_redirect_uri = 'http://localhost:3000/auth/callback'; // Pointing to React app
+const spotify_redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Pointing to React app
 
 const generateRandomString = function (length) {
   let text = '';
