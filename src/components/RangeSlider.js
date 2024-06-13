@@ -12,16 +12,13 @@ export default function RangeSlider({
   const [value, setValue] = React.useState(values);
 
   const handleChange = (event, newValue) => {
-    console.log(" *** NEW SLIDER VALUES", newValue);
     setValue(newValue);
+    updatePosHandler(newValue);
   };
 
   useEffect(() => {
     setValue(values);
   }, [values]);
-  useEffect(() => {
-    updatePosHandler(value);
-  }, [updatePosHandler, value]);
 
   return (
     <Slider
