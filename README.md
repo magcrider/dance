@@ -68,3 +68,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## .env file
+
+```
+SPOTIFY_CLIENT_ID='your-spotify-client-id'
+SPOTIFY_CLIENT_SECRET='your-spotify-client-secret'
+REACT_APP_SERVER_URL='http://localhost:5000'
+SPOTIFY_REDIRECT_URI='http://localhost:3000/auth/callback'
+PRODUCTION_URL='https://dance.magc.co'
+NODE_ENV='' //set this to 'production' when ready
+```

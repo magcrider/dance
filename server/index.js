@@ -30,7 +30,7 @@ const app = express();
 
 // Use the cors middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'http://localhost:3000'
+  origin: process.env.NODE_ENV === 'production' ? process.env.PRODUCTION_URL : 'http://localhost:3000'
 }));
 
 app.use(bodyParser.json());
