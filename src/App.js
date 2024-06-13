@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Login from "./Login";
 import WebPlayback from "./WebPlayback";
@@ -9,7 +8,7 @@ function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const authorizationCode = urlParams.get("code");
 
-  const API_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000';
+  const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_SERVER_URL : 'http://localhost:5000';
 
   useEffect(() => {
     async function getToken() {
