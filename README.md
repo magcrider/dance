@@ -77,6 +77,6 @@ SPOTIFY_CLIENT_ID='your-spotify-client-id'
 SPOTIFY_CLIENT_SECRET='your-spotify-client-secret'
 REACT_APP_SERVER_URL='http://localhost:5000'
 SPOTIFY_REDIRECT_URI='http://localhost:3000/auth/callback'
-PRODUCTION_URL='https://dance.magc.co'
+PRODUCTION_URL='https://dance.magc.co' //set this to 'http://localhost:3000' when locally testing
 NODE_ENV='' //set this to 'production' when ready
 ```
