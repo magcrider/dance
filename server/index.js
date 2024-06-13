@@ -2,8 +2,10 @@ const express = require('express');
 const request = require('request');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const path = require('path');
+const cors = require('cors');
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 dotenv.config();
 
@@ -12,7 +14,7 @@ let refresh_token = '';
 
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-const spotify_redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Pointing to React app
+const spotify_redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 
 const generateRandomString = function (length) {
   let text = '';
@@ -26,7 +28,15 @@ const generateRandomString = function (length) {
 
 const app = express();
 
+// Use the cors middleware
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'http://localhost:3000'
+}));
+
 app.use(bodyParser.json());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
 app.get('/auth/login', (req, res) => {
   const scope = "streaming user-read-email user-read-private";
@@ -36,7 +46,7 @@ app.get('/auth/login', (req, res) => {
     response_type: "code",
     client_id: spotify_client_id,
     scope: scope,
-    redirect_uri: spotify_redirect_uri, // Using client-side redirect URI
+    redirect_uri: spotify_redirect_uri,
     state: state
   });
 
@@ -115,6 +125,11 @@ app.get('/auth/refresh_token', (req, res) => {
       res.status(response.statusCode).send('Error refreshing access token');
     }
   });
+});
+
+// Catch-all handler to serve the React app's index.html for any other request
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
 app.listen(port, () => {

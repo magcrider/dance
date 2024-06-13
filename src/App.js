@@ -9,23 +9,26 @@ function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const authorizationCode = urlParams.get("code");
 
+  const API_URL = process.env.NODE_ENV === 'production' ? 'http://localhost:5000' : '';
+
   useEffect(() => {
     async function getToken() {
-      const response = await fetch(`/auth/token`);
-      const json = await response.json();
-      if (json.access_token !== "") setToken(json.access_token);
-      // console.log(" *** tokenstate:", token);
+      try {
+        const response = await fetch(`${API_URL}/auth/token`);
+        const json = await response.json();
+        if (json.access_token !== "") setToken(json.access_token);
+      } catch (error) {
+        console.error("Error fetching token:", error);
+      }
     }
     getToken();
-  }, [token]);
+  }, [API_URL, token]);
+
   useEffect(() => {
     async function handleAuthCallback() {
-      console.log(" *** handleAuthCallback token", token);
       if (!token && authorizationCode) {
         try {
-          const response = await fetch(
-            `/auth/callback?code=${authorizationCode}`
-          );
+          const response = await fetch(`${API_URL}/auth/callback?code=${authorizationCode}`);
           const data = await response.json();
           setToken(data.access_token);
           console.log("Access Token:", data.access_token);
@@ -38,11 +41,11 @@ function App() {
       }
     }
     handleAuthCallback();
-  }, [authorizationCode, token]);
+  }, [API_URL, authorizationCode, token]);
 
   async function refreshAccessToken() {
     try {
-      const response = await fetch("/auth/refresh_token");
+      const response = await fetch(`${API_URL}/auth/refresh_token`);
       const data = await response.json();
       setToken(data.access_token);
       console.log(" *** Refreshed Access Token:", data.access_token);
