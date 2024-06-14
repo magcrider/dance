@@ -27,7 +27,9 @@
     "eject": "react-scripts eject",
     "prod-server": "node server/index.js",
     "prod-client": "serve -s build",
-    "start:prod": "concurrently \"npm run prod-server\" \"npm run prod-client\""
+    "start:prod": "concurrently \"npm run prod-server\" \"npm run prod-client\"",
+    "vercel-build": "npm run build",
+    "start:vercel": "npm run build && node server/index.js"
   },
   "proxy": "http://localhost:5000",
   "eslintConfig": {
