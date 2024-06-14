@@ -80,7 +80,7 @@ app.get('/auth/callback', (req, res) => {
     if (response.statusCode === 200) {
       access_token = body.access_token;
       refresh_token = body.refresh_token;
-      res.json({ access_token: access_token });
+      res.redirect('/'); // Redirect to the root of your app
     } else {
       console.error('Error fetching access token:', body);
       res.status(response.statusCode).send('Error fetching access token');
