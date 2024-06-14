@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
-import { FaShuffle, FaRepeat } from "react-icons/fa6";
 import { TbRepeat, TbRepeatOff } from "react-icons/tb";
 import { RiExpandRightFill, RiExpandLeftFill } from "react-icons/ri";
 import {
