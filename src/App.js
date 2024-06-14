@@ -15,17 +15,19 @@ function App() {
       try {
         const response = await fetch(`${API_URL}/auth/token`);
         const json = await response.json();
-        if (json.access_token !== "") setToken(json.access_token);
+        if (json.access_token) {
+          setToken(json.access_token);
+        }
       } catch (error) {
         console.error("Error fetching token:", error);
       }
     }
     getToken();
-  }, [API_URL, token]);
+  }, [API_URL]);
 
   useEffect(() => {
     async function handleAuthCallback() {
-      if (!token && authorizationCode) {
+      if (authorizationCode) {
         try {
           const response = await fetch(`${API_URL}/auth/callback?code=${authorizationCode}`);
           const data = await response.json();
@@ -40,7 +42,7 @@ function App() {
       }
     }
     handleAuthCallback();
-  }, [API_URL, authorizationCode, token]);
+  }, [API_URL, authorizationCode]);
 
   async function refreshAccessToken() {
     try {
@@ -56,11 +58,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h2
-          onClick={() => {
-            refreshAccessToken();
-          }}
-        >
+        <h2 onClick={refreshAccessToken}>
           MAGC Dance player
         </h2>
       </header>
